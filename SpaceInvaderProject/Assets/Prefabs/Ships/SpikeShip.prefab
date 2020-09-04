@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9028835636765440964}
   - component: {fileID: 4262003579359555287}
   - component: {fileID: -757817513693342019}
-  - component: {fileID: 1088877399121123739}
+  - component: {fileID: 922803956195026072}
   m_Layer: 0
   m_Name: SpikeShip
   m_TagString: Untagged
@@ -110,8 +110,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
---- !u!58 &1088877399121123739
-CircleCollider2D:
+  projectilePrefab: {fileID: 8678761060058328657, guid: de2666ee904687f4497670ccf907c236, type: 3}
+  projectileSpeed: 10
+  shotCounter: 0
+  minTimeBetweenShots: 0.2
+  maxTimeBetweenShots: 1.5
+--- !u!60 &922803956195026072
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -123,6 +128,34 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0015702248, y: 0.09576337}
-  serializedVersion: 2
-  m_Radius: 0.46545798
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 0.16, y: 0.16}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.4990522, y: -0.060314655}
+      - {x: 0.50141907, y: 0.37308407}
+      - {x: 0.37659937, y: 0.44244814}
+      - {x: 0.25080884, y: 0.36850595}
+      - {x: 0.0032897647, y: 0.50148344}
+      - {x: -0.24999636, y: 0.37292004}
+      - {x: -0.3844963, y: 0.4449296}
+      - {x: -0.5038425, y: 0.36938047}
+      - {x: -0.50177693, y: -0.059434414}
+      - {x: -0.43500268, y: -0.36936712}
+      - {x: -0.37238953, y: -0.50105906}
+      - {x: -0.3121644, y: -0.5016041}
+      - {x: -0.15545407, y: 0.12410879}
+      - {x: -0.062355608, y: -0.25001764}
+      - {x: 0.06215675, y: -0.24978161}
+      - {x: 0.15518792, y: 0.12345219}
+      - {x: 0.31511766, y: -0.5019107}
+      - {x: 0.37383434, y: -0.5}
+      - {x: 0.4395826, y: -0.3686962}

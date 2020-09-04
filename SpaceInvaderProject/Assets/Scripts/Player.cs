@@ -5,16 +5,18 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // configuration parameters
-    [Header("Movement")]
+    [Header("Player")]
+    [SerializeField] float health = 200f;
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float padding = 1f;
-    [Header("Shooting")]
+
+    [Header("Projectile")]
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] float projectileSpeed = 10f;
     [SerializeField] float projectileFiringPeriod = .1f;
 
-    Coroutine firingCoroutine;
 
+    Coroutine firingCoroutine;
     float xMin;
     float xMax;
     float yMin;
@@ -34,6 +36,21 @@ public class Player : MonoBehaviour
         Fire();
         // Touch controls
         //TouchMove();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        DamageDealer damageDealer = other.GetComponent<DamageDealer>();
+        ProcessHit(damageDealer);
+    }
+
+    private void ProcessHit(DamageDealer damageDealer)
+    {
+        health -= damageDealer.GetDamage();
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Fire()
