@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ea79ba9f3139054a97a52f6e7b52e8e, type: 3}
-  m_Name: Wave 1
+  m_Name: Wave Spike 3
   m_EditorClassIdentifier: 
-  pathPrefab: {fileID: 7626752547731844729, guid: d1eba7365a0d6f743b0dfc24b8f008ad, type: 3}
+  pathPrefab: {fileID: 4546833647079478778, guid: ddd7905912a920943812557eb1598195, type: 3}
   enemyPrefab: {fileID: 9028835636765440965, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
-  timeBetweenSpawns: 1
-  spawnRandomFactor: 2
-  numberOfEnemies: 10
-  moveSpeed: 4
+  timeBetweenSpawns: 2
+  spawnRandomFactor: 0.2
+  numberOfEnemies: 5
+  moveSpeed: 2
