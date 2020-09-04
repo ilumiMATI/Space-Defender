@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 745025496}
   - component: {fileID: 745025495}
   m_Layer: 0
-  m_Name: StarfieldDistant
+  m_Name: StarfieldDistantVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -218,7 +218,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -453,8 +453,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 1, b: 1, a: 0.31764707}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.7882353}
+      minColor: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 0.31764707}
+      maxColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 0.7882353}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -3784,8 +3784,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.754717, g: 0.754717, b: 0.754717, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.2735849, g: 0.2735849, b: 0.2735849, a: 1}
+        key1: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -4992,6 +4992,67 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1001 &811912392
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4262003579359555287, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440965, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_Name
+      value: SpikeShip
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_RootOrder
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9028835636765440971, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c0fae8d85e8b26d47a97abf89431c37f, type: 3}
 --- !u!1 &1027458525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5070,7 +5131,7 @@ GameObject:
   - component: {fileID: 1446550040}
   - component: {fileID: 1446550039}
   m_Layer: 0
-  m_Name: StarfieldClose
+  m_Name: StarfieldCloseVFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5096,7 +5157,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5349,8 +5410,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 1, b: 1, a: 0.11372549}
-      maxColor: {r: 1, g: 1, b: 1, a: 0.3882353}
+      minColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 0.11372549}
+      maxColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 0.3882353}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5412,7 +5473,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
+      scalar: 0.15
       minScalar: 0.025
       maxCurve:
         serializedVersion: 2

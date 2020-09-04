@@ -7,6 +7,12 @@ public class Enemy : MonoBehaviour
 {
     [Header("Enemy")]
     [SerializeField] float health = 100;
+    
+
+    [Header("VFX")]
+    [SerializeField] GameObject explosionVFX;
+    [SerializeField] float timeDestroyVFX = 1.5f;
+    [SerializeField] float timeToDestroyObject = 0.15f;
 
     [Header("Projectile")]
     [SerializeField] GameObject projectilePrefab;
@@ -61,7 +67,15 @@ public class Enemy : MonoBehaviour
         damageDealer.Hit();
         if (health <= 0)
         {
-            Destroy(gameObject);
+            GameObject spawnedExplosionVFX = Instantiate(
+                explosionVFX,
+                new Vector3(transform.position.x, transform.position.y, -1f),
+                Quaternion.identity) as GameObject;
+            Destroy(spawnedExplosionVFX, timeDestroyVFX);
+
+            GetComponent<EnemyPathing>().enabled = false;
+            GetComponent<PolygonCollider2D>().enabled = false;
+            Destroy(gameObject, timeToDestroyObject);
         }
     }
 }

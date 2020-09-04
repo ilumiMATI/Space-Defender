@@ -9,6 +9,12 @@ public class Player : MonoBehaviour
     [SerializeField] float health = 200f;
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float padding = 1f;
+    
+
+    [Header("VFX")]
+    [SerializeField] GameObject explosionVFX;
+    [SerializeField] float timeDestroyVFX = 1.5f;
+    [SerializeField] float timeToDestroyObject = 0.15f;
 
     [Header("Projectile")]
     [SerializeField] GameObject projectilePrefab;
@@ -52,7 +58,12 @@ public class Player : MonoBehaviour
         damageDealer.Hit();
         if (health <= 0)
         {
-            Destroy(gameObject);
+            GameObject spawnedExplosionVFX = Instantiate(
+                explosionVFX,
+                new Vector3(transform.position.x, transform.position.y, -1f),
+                Quaternion.identity) as GameObject;
+            Destroy(spawnedExplosionVFX, timeDestroyVFX);
+            Destroy(gameObject, timeToDestroyObject);
         }
     }
 

@@ -96,12 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ff28d19587606d4cb66528f054979c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10000
+  health: 500
   moveSpeed: 5
   padding: 0.5
+  explosionVFX: {fileID: 7132017867729042802, guid: 7f0250b4794a21b4ba6b93433721596b, type: 3}
+  timeDestroyVFX: 1.6
+  timeToDestroyObject: 0.15
   projectilePrefab: {fileID: 5764086078689772430, guid: b841db8c60cf581409b16ae0a5562785, type: 3}
   projectileSpeed: 6
-  projectileFiringPeriod: 0.4
+  projectileFiringPeriod: 0.25
   timeLastShot: 0
 --- !u!60 &8374989406784633479
 PolygonCollider2D:

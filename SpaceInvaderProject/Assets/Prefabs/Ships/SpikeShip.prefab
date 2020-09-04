@@ -110,6 +110,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  explosionVFX: {fileID: 8573651788179199581, guid: 3dacf22dadb696c49a505a2381c65802, type: 3}
+  timeDestroyVFX: 1.6
+  timeToDestroyObject: 0.15
   projectilePrefab: {fileID: 8678761060058328657, guid: de2666ee904687f4497670ccf907c236, type: 3}
   projectileSpeed: 5
   shotCounter: 0
