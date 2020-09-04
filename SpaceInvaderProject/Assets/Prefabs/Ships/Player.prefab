@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5128233966185338954}
   - component: {fileID: 5128233966185338952}
   - component: {fileID: 8374989406784633479}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,12 +96,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ff28d19587606d4cb66528f054979c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
+  health: 10000
   moveSpeed: 5
   padding: 0.5
   projectilePrefab: {fileID: 5764086078689772430, guid: b841db8c60cf581409b16ae0a5562785, type: 3}
-  projectileSpeed: 10
-  projectileFiringPeriod: 0.1
+  projectileSpeed: 6
+  projectileFiringPeriod: 0.4
+  timeLastShot: 0
 --- !u!60 &8374989406784633479
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7036358828875560133}
   - component: {fileID: -6314833727593700386}
   - component: {fileID: 6315528988164817714}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BlastCannon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 500
   projectilePrefab: {fileID: 8678761060058328657, guid: de2666ee904687f4497670ccf907c236, type: 3}
-  projectileSpeed: 10
+  projectileSpeed: 4
   shotCounter: 0
   minTimeBetweenShots: 2
   maxTimeBetweenShots: 3

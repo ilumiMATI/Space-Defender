@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] float projectileSpeed = 10f;
     [SerializeField] float projectileFiringPeriod = .1f;
+    [SerializeField] float timeLastShot;
 
 
     Coroutine firingCoroutine;
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         // Computer controls
-        SmoothMove();
+        RapidMove();
         Fire();
         // Touch controls
         //TouchMove();
@@ -41,12 +42,14 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
+        if (!damageDealer) { return; }
         ProcessHit(damageDealer);
     }
 
     private void ProcessHit(DamageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
+        damageDealer.Hit();
         if (health <= 0)
         {
             Destroy(gameObject);
@@ -57,7 +60,10 @@ public class Player : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1"))
         {
-            firingCoroutine = StartCoroutine(FireContinuously());
+            if (Time.timeSinceLevelLoad - timeLastShot > projectileFiringPeriod)
+            {
+                firingCoroutine = StartCoroutine(FireContinuously());
+            }
         }
         else if(Input.GetButtonUp("Fire1"))
         {
@@ -74,6 +80,7 @@ public class Player : MonoBehaviour
                 transform.position, 
                 Quaternion.identity) as GameObject;
             projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(0, projectileSpeed);
+            timeLastShot = Time.timeSinceLevelLoad;
             yield return new WaitForSeconds(projectileFiringPeriod);
         }
     }
