@@ -99,6 +99,12 @@ MonoBehaviour:
   health: 500
   moveSpeed: 5
   padding: 0.5
+  shotSFX: {fileID: 8300000, guid: a087a7b4e6e527f4fb0bd8c1cb539a4e, type: 3}
+  shotVolume: 0.25
+  hitSFX: {fileID: 8300000, guid: e828120fb5e77384c9262c923f27c0b9, type: 3}
+  hitVolume: 0.75
+  deathSFX: {fileID: 8300000, guid: 3d174520431e73048bae992785af9948, type: 3}
+  deathVolume: 1
   explosionVFX: {fileID: 7132017867729042802, guid: 7f0250b4794a21b4ba6b93433721596b, type: 3}
   timeDestroyVFX: 1.6
   timeToDestroyObject: 0.15

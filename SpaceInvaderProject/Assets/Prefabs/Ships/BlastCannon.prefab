@@ -110,6 +110,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 500
+  shotSFX: {fileID: 8300000, guid: f937298ce4cd5b14b98c50018ab2ef0f, type: 3}
+  shotVolume: 1
+  hitSFX: {fileID: 8300000, guid: a5d48e83b0b0bdd48b8924c957cb2f45, type: 3}
+  hitVolume: 0.5
+  deathSFX: {fileID: 8300000, guid: d6cf2d7ad8bc2a341a2074f461bac50a, type: 3}
+  deathVolume: 0.65
   explosionVFX: {fileID: 994617301026302415, guid: 149027ba7f27a1947ac7b66ebcce563a, type: 3}
   timeDestroyVFX: 1.6
   timeToDestroyObject: 0.15
