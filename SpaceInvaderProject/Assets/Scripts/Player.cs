@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] float health = 200f;
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float padding = 1f;
+    [SerializeField] float timeToBackToMenu = 2.5f;
 
     [Header("SFX")]
     [SerializeField] AudioClip shotSFX;
@@ -80,6 +81,9 @@ public class Player : MonoBehaviour
         Destroy(gameObject, timeToDestroyObject);
 
         if(deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
+
+        SceneController sceneController = FindObjectOfType<SceneController>();
+        sceneController.StartCoroutine(sceneController.LoadStartScene(timeToBackToMenu));
     }
 
     private void Fire()

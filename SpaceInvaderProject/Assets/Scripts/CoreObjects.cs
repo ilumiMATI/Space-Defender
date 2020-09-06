@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoNotDestroyOnLoad : MonoBehaviour
+public class CoreObjects : MonoBehaviour
 {
     void Awake()
     {
-        int elementsCount = FindObjectsOfType<DoNotDestroyOnLoad>().Length;
+        int elementsCount = FindObjectsOfType<CoreObjects>().Length;
         if (elementsCount > 1)
         {
             gameObject.SetActive(false);

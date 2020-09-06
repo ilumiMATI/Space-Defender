@@ -119,7 +119,7 @@ MonoBehaviour:
   explosionVFX: {fileID: 994617301026302415, guid: 149027ba7f27a1947ac7b66ebcce563a, type: 3}
   timeDestroyVFX: 1.6
   timeToDestroyObject: 0.15
-  projectilePrefab: {fileID: 8678761060058328657, guid: de2666ee904687f4497670ccf907c236, type: 3}
+  projectilePrefab: {fileID: 7762332460598487637, guid: 4624359388a46ee469ef5d3d16d12247, type: 3}
   projectileSpeed: 4
   shotCounter: 0
   minTimeBetweenShots: 2
