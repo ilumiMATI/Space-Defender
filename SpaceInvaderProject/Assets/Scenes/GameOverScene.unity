@@ -356,6 +356,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8550984502972115913, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 470
+      objectReference: {fileID: 0}
     - target: {fileID: 8550984502972115926, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
