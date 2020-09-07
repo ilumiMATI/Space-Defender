@@ -9,7 +9,6 @@ public class Player : MonoBehaviour
     [SerializeField] float health = 200f;
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float padding = 1f;
-    [SerializeField] float timeToBackToMenu = 2.5f;
 
     [Header("SFX")]
     [SerializeField] AudioClip shotSFX;
@@ -36,7 +35,6 @@ public class Player : MonoBehaviour
     float xMax;
     float yMin;
     float yMax;
-    bool isDead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -84,8 +82,7 @@ public class Player : MonoBehaviour
 
         if(deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
 
-        SceneController sceneController = FindObjectOfType<SceneController>();
-        sceneController.StartCoroutine(sceneController.LoadGameOverScene(timeToBackToMenu));
+        FindObjectOfType<SceneController>().LoadGameOverScene();
         enabled = false;
     }
 
