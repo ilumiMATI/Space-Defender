@@ -49,6 +49,10 @@ public class HighScore : MonoBehaviour
     public void ResetHighScore()
     {
         PlayerPrefs.SetInt("HighScore", 0);
+        if(highScoreDisplay)
+        {
+            highScoreDisplay.Set(0);
+        }
     }
 
     public bool HandleHighScoreCheck(int scoreToCheck)
