@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -29,17 +31,21 @@ public class Player : MonoBehaviour
     [SerializeField] float projectileFiringPeriod = .1f;
     [SerializeField] float timeLastShot;
 
-
+    [SerializeField] GameSession theGameSession;
     Coroutine firingCoroutine;
     float xMin;
     float xMax;
     float yMin;
     float yMax;
+    float maxHealth;
 
     // Start is called before the first frame update
     void Start()
     {
+        maxHealth = health;   
         SetUpMoveBoundaries();
+        theGameSession = FindObjectOfType<GameSession>();
+        theGameSession.UpdateHealth(Convert.ToInt32(health));
     }
 
     // Update is called once per frame
@@ -54,7 +60,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter with " + other.gameObject.name);
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
         if (!damageDealer) { return; }
         if (hitSFX) { AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position, hitVolume); }
@@ -64,6 +69,7 @@ public class Player : MonoBehaviour
     private void ProcessHit(DamageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
+        theGameSession.UpdateHealth( Convert.ToInt32( Mathf.Clamp(health, 0, maxHealth) ) );
         damageDealer.Hit();
         if (health <= 0)
         {
@@ -73,17 +79,25 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
-        GameObject spawnedExplosionVFX = Instantiate(
-                        explosionVFX,
-                        new Vector3(transform.position.x, transform.position.y, -1f),
-                        Quaternion.identity) as GameObject;
-        Destroy(spawnedExplosionVFX, timeDestroyVFX);
-        Destroy(gameObject, timeToDestroyObject);
-
-        if(deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
-
+        HandleVFX();
+        HandleDestroying();
+        if (deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
         FindObjectOfType<SceneController>().LoadGameOverScene();
+    }
+
+    private void HandleDestroying()
+    {
+        Destroy(gameObject, timeToDestroyObject);
         enabled = false;
+    }
+
+    private void HandleVFX()
+    {
+        GameObject spawnedExplosionVFX = Instantiate(
+            explosionVFX,
+            new Vector3(transform.position.x, transform.position.y, -1f),
+            Quaternion.identity) as GameObject;
+        Destroy(spawnedExplosionVFX, timeDestroyVFX);
     }
 
     private void Fire()

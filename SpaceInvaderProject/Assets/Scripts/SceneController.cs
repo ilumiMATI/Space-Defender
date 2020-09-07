@@ -20,6 +20,11 @@ public class SceneController : MonoBehaviour
     public void LoadGameScene()
     {
         SceneManager.LoadScene(1);
+        var gameSession = FindObjectOfType<GameSession>();
+        if(gameSession)
+        {
+            gameSession.Reset();
+        }
     }
 
     public void QuitGame()

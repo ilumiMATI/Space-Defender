@@ -123,6 +123,63 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &1390710598358081506
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4761241236234209007, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7775432345908856927, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
+      propertyPath: m_Name
+      value: High Score
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fb240ffa5cad3fb4ea1fd95a6545fb7f, type: 3}
 --- !u!1001 &2839784894688875301
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -187,6 +244,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1158493187717354343, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1158493187717354344, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2232927501967695247, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4432937169366102530, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5976259599976633474, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -274,6 +347,14 @@ PrefabInstance:
     - target: {fileID: 5976259599976633502, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
       propertyPath: m_Name
       value: GameOver UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6024933866732679269, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8550984502972115913, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8550984502972115926, guid: 952684db29e486f4f8ccd250e5dbff9b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 200
+  points: 1000
   shotSFX: {fileID: 8300000, guid: f937298ce4cd5b14b98c50018ab2ef0f, type: 3}
   shotVolume: 1
   hitSFX: {fileID: 8300000, guid: a5d48e83b0b0bdd48b8924c957cb2f45, type: 3}

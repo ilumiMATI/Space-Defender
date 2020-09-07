@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("Enemy")]
     [SerializeField] float health = 100;
+    [SerializeField] int points = 100;
 
     [Header("SFX")]
     [SerializeField] AudioClip shotSFX;
@@ -44,7 +45,6 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter with " + other.gameObject.name);
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
         if (!damageDealer) { return; }
         if (hitSFX) { AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position, hitVolume); }
@@ -85,16 +85,25 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        GameObject spawnedExplosionVFX = Instantiate(
-                        explosionVFX,
-                        new Vector3(transform.position.x, transform.position.y, -1f),
-                        Quaternion.identity) as GameObject;
-        Destroy(spawnedExplosionVFX, timeDestroyVFX);
+        HandleVFX();
+        HandleDestroying();
+        if (deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
+        FindObjectOfType<GameSession>().AddScore(points);
+    }
 
+    private void HandleDestroying()
+    {
         GetComponent<EnemyPathing>().enabled = false;
         GetComponent<PolygonCollider2D>().enabled = false;
         Destroy(gameObject, timeToDestroyObject);
+    }
 
-        if(deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
+    private void HandleVFX()
+    {
+        GameObject spawnedExplosionVFX = Instantiate(
+                                explosionVFX,
+                                new Vector3(transform.position.x, transform.position.y, -1f),
+                                Quaternion.identity) as GameObject;
+        Destroy(spawnedExplosionVFX, timeDestroyVFX);
     }
 }
