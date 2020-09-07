@@ -44,10 +44,10 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("OnTriggerEnter with " + other.gameObject.name);
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
         if (!damageDealer) { return; }
         if (hitSFX) { AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position, hitVolume); }
-
         ProcessHit(damageDealer);
     }
 

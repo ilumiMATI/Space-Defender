@@ -99,6 +99,7 @@ MonoBehaviour:
   health: 500
   moveSpeed: 5
   padding: 0.5
+  timeToBackToMenu: 2.5
   shotSFX: {fileID: 8300000, guid: a087a7b4e6e527f4fb0bd8c1cb539a4e, type: 3}
   shotVolume: 0.25
   hitSFX: {fileID: 8300000, guid: e828120fb5e77384c9262c923f27c0b9, type: 3}

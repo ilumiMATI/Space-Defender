@@ -5,14 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    public IEnumerator LoadStartScene(float time)
+    public IEnumerator LoadGameOverScene(float time)
     {
         yield return new WaitForSeconds(time);
+        SceneManager.LoadScene(2);
+    }
+
+    public void LoadStartScene()
+    {
         SceneManager.LoadScene(0);
     }
 
     public void LoadGameScene()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     float xMax;
     float yMin;
     float yMax;
+    bool isDead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("OnTriggerEnter with " + other.gameObject.name);
         DamageDealer damageDealer = other.GetComponent<DamageDealer>();
         if (!damageDealer) { return; }
         if (hitSFX) { AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position, hitVolume); }
@@ -83,7 +85,8 @@ public class Player : MonoBehaviour
         if(deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
 
         SceneController sceneController = FindObjectOfType<SceneController>();
-        sceneController.StartCoroutine(sceneController.LoadStartScene(timeToBackToMenu));
+        sceneController.StartCoroutine(sceneController.LoadGameOverScene(timeToBackToMenu));
+        enabled = false;
     }
 
     private void Fire()
