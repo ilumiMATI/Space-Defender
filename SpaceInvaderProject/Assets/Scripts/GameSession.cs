@@ -4,14 +4,12 @@ using UnityEngine;
 using TMPro;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using UnityEditor.Build.Content;
 
 public class GameSession : MonoBehaviour
 {
     // state
-    //ScoreDisplay scoreDisplay = null;
     Display scoreDisplay = null;
-    [SerializeField]Display healthDisplay = null;
+    Display healthDisplay = null;
     [SerializeField] int currentScore = 0;
 
     void OnEnable()

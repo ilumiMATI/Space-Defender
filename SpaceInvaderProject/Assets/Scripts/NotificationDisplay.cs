@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class NotificationDisplay : Display
 {
-    [SerializeField] bool isBlinking = false;
     public void Show()
     {
         textObject.enabled = true;
