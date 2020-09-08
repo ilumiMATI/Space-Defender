@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ea79ba9f3139054a97a52f6e7b52e8e, type: 3}
   m_Name: Wave Tank
   m_EditorClassIdentifier: 
-  pathPrefab: {fileID: 0}
-  enemyPrefab: {fileID: 0}
-  timeBetweenSpawns: 0.5
-  spawnRandomFactor: 0.2
-  numberOfEnemies: 5
-  moveSpeed: 2
+  pathPrefab: {fileID: 4160028318920864977, guid: fec612fb984391d4dbb4e412e02c319d, type: 3}
+  enemyPrefab: {fileID: 3268740369660926314, guid: b01d7963ca602f34991161a58524ca4d, type: 3}
+  timeBetweenSpawns: 2
+  spawnRandomFactor: 1
+  numberOfEnemies: 2
+  moveSpeed: 1
