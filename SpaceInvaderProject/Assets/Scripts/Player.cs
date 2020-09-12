@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -180,7 +181,7 @@ public class Player : MonoBehaviour
     Vector2 startObjectPos;
     Vector2 deltaPos;
     int movingID = -1;
-    int shootingID = -2;
+    int shootingID = -3;
     [Header("Touch Controls")]
     [SerializeField] float sensitivity = 1.3f;
 
@@ -197,10 +198,15 @@ public class Player : MonoBehaviour
                 case TouchPhase.Began:
                     SetupTouchOffset(moveTouch);
                     break;
-
+                case TouchPhase.Stationary:
                 case TouchPhase.Moved:
                     if(movingID != moveTouch.fingerId)
                     {
+                        //if (firingCoroutine != null)
+                        //{
+                        //    StopCoroutine(firingCoroutine);
+                        //}
+                        //firingCoroutine = null;
                         SetupTouchOffset(moveTouch);
                     }
 
@@ -210,13 +216,14 @@ public class Player : MonoBehaviour
                     break;
 
                 case TouchPhase.Ended:
+                    movingID = -1;
                     break;
             }
 
-                newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
-                newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
+            newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
+            newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
 
-                transform.position = newPos;
+            transform.position = newPos;
         }
     }
 
@@ -229,19 +236,11 @@ public class Player : MonoBehaviour
 
     private void TouchFire()
     {
-        if(shootingID == movingID)
-        {
-            if (firingCoroutine != null)
-            {
-                StopCoroutine(firingCoroutine);
-            }
-            firingCoroutine = null;
-        }
 
         if (Input.touchCount > 1)
         {
             Touch fireTouch = Input.GetTouch(1);
-            shootingID = fireTouch.fingerId;
+            
 
             if(fireTouch.phase == TouchPhase.Began)
             {
@@ -250,9 +249,9 @@ public class Player : MonoBehaviour
                     firingCoroutine = StartCoroutine(FireContinuously());
                 }
             }
-            else if (fireTouch.phase == TouchPhase.Ended || fireTouch.phase == TouchPhase.Canceled)
+            else if (fireTouch.phase == TouchPhase.Ended)
             {
-                if(firingCoroutine != null)
+                if(firingCoroutine != null && fireTouch.fingerId != movingID)
                 {
                     StopCoroutine(firingCoroutine);
                 } 
