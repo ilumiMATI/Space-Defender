@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public delegate void Event();
+public delegate void TouchEvent(Touch touchInput);
 
 public class TouchTracker
 {
     public string name = "default";
-    public Touch theTouch { get; }
+    public int fingerID { get; }
     public float timeCreated { get; }
-    public Event OnBegan;
-    public Event OnMoved;
-    public Event OnEnded;
-
-    public TouchTracker(Touch touch, float time, Event OnBegan = null, Event OnMoved = null, Event OnEnded = null)
+    public TouchEvent OnFrame = null;
+    public TouchEvent OnBegan = null;
+    public TouchEvent OnStationary = null;
+    public TouchEvent OnMoved = null;
+    public TouchEvent OnEnded = null;
+    
+    public TouchTracker(int fingerID, float time)
     {
-        theTouch = touch;
+        this.fingerID = fingerID;
         timeCreated = time;
-        this.OnBegan = OnBegan;
-        this.OnMoved = OnMoved;
-        this.OnEnded = OnEnded;
     }
 }

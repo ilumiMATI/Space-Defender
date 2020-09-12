@@ -32,7 +32,24 @@ public class Player : MonoBehaviour
     [SerializeField] float projectileFiringPeriod = .1f;
     [SerializeField] float timeLastShot;
 
+    [Header("Touch Debug")]
+    // Touch
+    
+    int movingID = -1;
+    int shootingID = -3;
+
+    [Header("Touch Controls")]
+    [SerializeField] float sensitivity = 1.3f;
+    [SerializeField] TouchManager theTouchManager;
+    TouchTracker moveTracker = null;
+    Vector2 destination;
+    Vector2 newPos;
+    Vector2 startTouchPos;
+    Vector2 startObjectPos;
+    Vector2 deltaPos;
+    [Header("Debug")]
     [SerializeField] GameSession theGameSession;
+
     Coroutine firingCoroutine;
     float xMin;
     float xMax;
@@ -43,25 +60,77 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Init
         maxHealth = health;   
         SetUpMoveBoundaries();
+        // Finding
         theGameSession = FindObjectOfType<GameSession>();
+        theTouchManager = FindObjectOfType<TouchManager>();
+        // After
         theGameSession.UpdateHealth(Convert.ToInt32(health));
         StartCoroutine(FireContinuously());
+        theTouchManager.OnTrackerCreated = OnTrackerCreated;
+        theTouchManager.OnTrackerLost = OnTrackerLost;
+    }
+    
+    void OnTrackerCreated()
+    {
+        if (moveTracker == null)
+        {
+            moveTracker = theTouchManager.GetNewTouchTracker("move");
+            moveTracker.OnBegan = (Touch touch) => 
+            {
+                SetupTouchOffset(touch);
+            };
+            moveTracker.OnMoved = (Touch touch) =>
+            {
+                Debug.Log("OnMoved:" + moveTracker.name);
+
+                newPos = transform.position;
+
+                deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(touch.position) - startTouchPos;
+                destination = startObjectPos + deltaPos * sensitivity;
+                newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+            };
+            moveTracker.OnFrame = (Touch touch) =>
+            {
+                newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
+                newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
+
+                transform.position = newPos;
+            };
+        }
+    }
+
+    void OnTrackerLost(string trackerName)
+    {
+        switch(trackerName)
+        {
+            case "move":
+                moveTracker = null;
+                break;
+        }
+    }
+
+    void ResetTrackers()
+    {
+        moveTracker.OnBegan = null;
+        moveTracker.OnMoved = null;
+        moveTracker.OnFrame = null;
     }
 
     // Update is called once per frame
     void Update()
     {
         // Keyboard controls
-        //RapidMove();
-        //Fire();
+        //RapidMove(); // works
+        //Fire(); // works
 
         // Touch controls
-        //TouchMove();
-        TouchOffsetMove();
-        //TouchFire();
-        //HandleMultipleTouch();
+        //TouchMove(); // works but it isn't fun to play
+        //TouchOffsetMove(); // works fine alone
+        //TouchFire(); // buggy
+        //HandleMultipleTouch(); // experimental
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -156,7 +225,6 @@ public class Player : MonoBehaviour
         var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
         transform.position = new Vector2(newXPos, newYPos);
     }
-
     private void TouchMove()
     {
         if (Input.touchCount > 0)
@@ -175,16 +243,6 @@ public class Player : MonoBehaviour
             transform.position = newPos;
         }
     }
-
-    // Touch
-    Vector2 startTouchPos;
-    Vector2 startObjectPos;
-    Vector2 deltaPos;
-    int movingID = -1;
-    int shootingID = -3;
-    [Header("Touch Controls")]
-    [SerializeField] float sensitivity = 1.3f;
-
     private void TouchOffsetMove()
     {
         if (Input.touchCount > 0)
@@ -229,7 +287,7 @@ public class Player : MonoBehaviour
 
     private void SetupTouchOffset(Touch touch)
     {
-        movingID = touch.fingerId;
+        Debug.Log("SetupTouchOffset");
         startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
         startObjectPos = transform.position;
     }
