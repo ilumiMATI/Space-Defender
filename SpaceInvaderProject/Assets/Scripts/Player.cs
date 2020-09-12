@@ -46,16 +46,21 @@ public class Player : MonoBehaviour
         SetUpMoveBoundaries();
         theGameSession = FindObjectOfType<GameSession>();
         theGameSession.UpdateHealth(Convert.ToInt32(health));
+        StartCoroutine(FireContinuously());
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Computer controls
-        RapidMove();
-        Fire();
+        // Keyboard controls
+        //RapidMove();
+        //Fire();
+
         // Touch controls
         //TouchMove();
+        TouchOffsetMove();
+        //TouchFire();
+        //HandleMultipleTouch();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -161,10 +166,98 @@ public class Player : MonoBehaviour
 
             Vector2 newPos = (Vector2)transform.position + deltaPos;
 
+            
+
             newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
             newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
 
             transform.position = newPos;
+        }
+    }
+
+    // Touch
+    Vector2 startTouchPos;
+    Vector2 startObjectPos;
+    Vector2 deltaPos;
+    int movingID = -1;
+    int shootingID = -2;
+    [Header("Touch Controls")]
+    [SerializeField] float sensitivity = 1.3f;
+
+    private void TouchOffsetMove()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch moveTouch = Input.GetTouch(0);
+            Vector2 destination;
+            Vector2 newPos = transform.position;
+
+            switch (moveTouch.phase)
+            {
+                case TouchPhase.Began:
+                    SetupTouchOffset(moveTouch);
+                    break;
+
+                case TouchPhase.Moved:
+                    if(movingID != moveTouch.fingerId)
+                    {
+                        SetupTouchOffset(moveTouch);
+                    }
+
+                    deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(moveTouch.position) - startTouchPos;
+                    destination = startObjectPos + deltaPos * sensitivity;
+                    newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+                    break;
+
+                case TouchPhase.Ended:
+                    break;
+            }
+
+                newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
+                newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
+
+                transform.position = newPos;
+        }
+    }
+
+    private void SetupTouchOffset(Touch touch)
+    {
+        movingID = touch.fingerId;
+        startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
+        startObjectPos = transform.position;
+    }
+
+    private void TouchFire()
+    {
+        if(shootingID == movingID)
+        {
+            if (firingCoroutine != null)
+            {
+                StopCoroutine(firingCoroutine);
+            }
+            firingCoroutine = null;
+        }
+
+        if (Input.touchCount > 1)
+        {
+            Touch fireTouch = Input.GetTouch(1);
+            shootingID = fireTouch.fingerId;
+
+            if(fireTouch.phase == TouchPhase.Began)
+            {
+                if (firingCoroutine == null)
+                {
+                    firingCoroutine = StartCoroutine(FireContinuously());
+                }
+            }
+            else if (fireTouch.phase == TouchPhase.Ended || fireTouch.phase == TouchPhase.Canceled)
+            {
+                if(firingCoroutine != null)
+                {
+                    StopCoroutine(firingCoroutine);
+                } 
+                firingCoroutine = null;
+            }
         }
     }
     private void SetUpMoveBoundaries()
