@@ -13,71 +13,17 @@ public class TouchManager : MonoBehaviour
     public EventDetails OnTrackerLost = null;
     public Event OnTrackerCreated = null;
 
+    // for interacting with player
+    Player thePlayer;
+
     void Start()
     {
-        
+        thePlayer = FindObjectOfType<Player>();
     }
 
     void Update()
     {
         HandleMultipleTouch();
-        HandleTrackers();
-    }
-
-    private void HandleTrackers()
-    {
-        foreach(TouchTracker touchTracker in touchTrackers)
-        {
-            Touch handledTouch = FindTouch(touchTracker);
-
-            if (handledTouch.phase == TouchPhase.Began)
-            {
-                touchTracker.OnBegan(handledTouch);
-            }
-            else if (handledTouch.phase == TouchPhase.Moved)
-            {
-                touchTracker.OnMoved(handledTouch);
-            }
-            else if (handledTouch.phase == TouchPhase.Stationary)
-            {
-                touchTracker.OnStationary(handledTouch);
-            }
-
-            touchTracker.OnFrame(handledTouch);
-        }
-    }
-
-    private static Touch FindTouch(TouchTracker touchTracker)
-    {
-        foreach (Touch touchElement in Input.touches)
-        {
-            if (touchElement.fingerId == touchTracker.fingerID)
-            {
-                return touchElement;
-            }
-        }
-        return Input.GetTouch(0);
-    }
-
-    private void OnFrameDefault(Touch touch)
-    {
-
-    }
-    private void OnBeganDefault(Touch touch)
-    {
-
-    }
-    private void OnStationaryDefault(Touch touch)
-    {
-
-    }
-    private void OnMovedDefault(Touch touch)
-    {
-
-    }
-    private void OnEndedDefault(Touch touch)
-    {
-
     }
 
     private void HandleMultipleTouch()
@@ -90,28 +36,34 @@ public class TouchManager : MonoBehaviour
             if (currentTouch.phase == TouchPhase.Began)
             {
                 tracker = new TouchTracker(currentTouch.fingerId, Time.time);
-                tracker.OnBegan = OnBeganDefault;
-                tracker.OnStationary = OnStationaryDefault;
-                tracker.OnMoved = OnMovedDefault;
-                tracker.OnEnded = OnEndedDefault;
-                tracker.OnFrame = OnFrameDefault;
                 touchTrackers.Add(tracker);
-                OnTrackerCreated();
 
-                //Debug.Log("Added touch." + currentTouch.fingerId);
+                OnTrackerCreated?.Invoke();
+
+                tracker.OnBegan?.Invoke(currentTouch);
+            }
+            else if (currentTouch.phase == TouchPhase.Stationary)
+            {
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
+
+                tracker.OnStationary?.Invoke(currentTouch);
             }
             else if (currentTouch.phase == TouchPhase.Moved)
             {
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
+                tracker.OnMoved?.Invoke(currentTouch);
             }
             else if (currentTouch.phase == TouchPhase.Ended)
             {
-                tracker = touchTrackers.Find((TouchTracker el) => el.fingerID == currentTouch.fingerId);
-                tracker.OnEnded(currentTouch);
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
+
+                tracker.OnEnded?.Invoke(currentTouch);
+
                 touchTrackers.Remove(tracker);
-                OnTrackerLost(tracker.name);
-                //Debug.Log("Removed touch." + currentTouch.fingerId);
+                OnTrackerLost?.Invoke(tracker.name);
             }
+            tracker.OnFrame?.Invoke(currentTouch);
         }
     }
 
@@ -130,19 +82,6 @@ public class TouchManager : MonoBehaviour
         {
             return null;
         }
-    }
-
-    public int HowManyUsedTouchTrackers()
-    {
-        int counter = 0;
-        foreach(TouchTracker touchTracker in touchTrackers)
-        {
-            if(touchTracker.name != "default")
-            {
-                counter++;
-            }
-        }
-        return counter;
     }
 
     private int CompareByTime(TouchTracker a,TouchTracker b)

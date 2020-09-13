@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
 
     [Header("Touch Debug")]
     // Touch
-    
+
     int movingID = -1;
     int shootingID = -3;
 
@@ -42,11 +42,13 @@ public class Player : MonoBehaviour
     [SerializeField] float sensitivity = 1.3f;
     [SerializeField] TouchManager theTouchManager;
     TouchTracker moveTracker = null;
+
     Vector2 destination;
     Vector2 newPos;
     Vector2 startTouchPos;
     Vector2 startObjectPos;
     Vector2 deltaPos;
+
     [Header("Debug")]
     [SerializeField] GameSession theGameSession;
 
@@ -61,7 +63,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         // Init
-        maxHealth = health;   
+        maxHealth = health;
         SetUpMoveBoundaries();
         // Finding
         theGameSession = FindObjectOfType<GameSession>();
@@ -73,36 +75,49 @@ public class Player : MonoBehaviour
         theTouchManager.OnTrackerLost = OnTrackerLost;
     }
     
-    void OnTrackerCreated()
+    public void OnTrackerCreated()
     {
         if (moveTracker == null)
         {
             moveTracker = theTouchManager.GetNewTouchTracker("move");
             moveTracker.OnBegan = (Touch touch) => 
             {
-                SetupTouchOffset(touch);
+                Player player = FindObjectOfType<Player>();
+                player.SetupTouchOffset(touch);
             };
-            moveTracker.OnMoved = (Touch touch) =>
+                
+            moveTracker.OnStationary = moveTracker.OnMoved = (Touch touch) =>
             {
-                Debug.Log("OnMoved:" + moveTracker.name);
-
-                newPos = transform.position;
-
-                deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(touch.position) - startTouchPos;
-                destination = startObjectPos + deltaPos * sensitivity;
-                newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+                Debug.Log("OnMoved:");
+                Player player = FindObjectOfType<Player>();
+                player.OnMoved(touch.position);
             };
+
             moveTracker.OnFrame = (Touch touch) =>
             {
-                newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
-                newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
-
-                transform.position = newPos;
+                Debug.Log("OnFrame");
+                Player player = FindObjectOfType<Player>();
+                player.OnFrame();
             };
         }
     }
 
-    void OnTrackerLost(string trackerName)
+    public void OnMoved(Vector2 position)
+    {
+        deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(position) - startTouchPos;
+        destination = startObjectPos + deltaPos * sensitivity;
+        newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+    }
+
+    public void OnFrame()
+    {
+        newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
+        newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
+
+        transform.position = newPos;
+    }
+
+    public void OnTrackerLost(string trackerName)
     {
         switch(trackerName)
         {
@@ -114,9 +129,15 @@ public class Player : MonoBehaviour
 
     void ResetTrackers()
     {
-        moveTracker.OnBegan = null;
-        moveTracker.OnMoved = null;
-        moveTracker.OnFrame = null;
+        theTouchManager.OnTrackerCreated = null;
+        theTouchManager.OnTrackerLost = null;
+        if(moveTracker != null)
+        {
+            moveTracker.OnBegan = null;
+            moveTracker.OnFrame = null;
+            moveTracker.OnMoved = null;
+            moveTracker.OnStationary = null;
+        }
     }
 
     // Update is called once per frame
@@ -154,6 +175,7 @@ public class Player : MonoBehaviour
 
     private void Die()
     {
+        ResetTrackers();
         HandleVFX();
         HandleDestroying();
         if (deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
@@ -285,9 +307,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void SetupTouchOffset(Touch touch)
+    public void SetupTouchOffset(Touch touch)
     {
-        Debug.Log("SetupTouchOffset");
+        newPos = transform.position;
         startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
         startObjectPos = transform.position;
     }
