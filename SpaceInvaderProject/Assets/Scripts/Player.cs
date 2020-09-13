@@ -59,6 +59,7 @@ public class Player : MonoBehaviour
     {
         // Init
         maxHealth = health;
+        timeLastShot = -999;
         SetUpMoveBoundaries();
         // Finding
         theGameSession = FindObjectOfType<GameSession>();
@@ -138,15 +139,14 @@ public class Player : MonoBehaviour
     }
     public void StartShooting()
     {
-        float deltaTimeLastShot = Time.time - timeLastShot;
-        if(deltaTimeLastShot < projectileFiringPeriod)
+        float deltaTimeLastShot = Time.timeSinceLevelLoad - timeLastShot;
+        if (deltaTimeLastShot < projectileFiringPeriod)
         {
             float fireDelay = projectileFiringPeriod - deltaTimeLastShot;
             firingCoroutine = StartCoroutine(FireContinuously(fireDelay));
             return;
         }
-
-        firingCoroutine = StartCoroutine(FireContinuously(0f));
+        firingCoroutine = StartCoroutine(FireContinuously(0));
     }
     public void StopShooting()
     {
@@ -177,7 +177,6 @@ public class Player : MonoBehaviour
         if (hitSFX) { AudioSource.PlayClipAtPoint(hitSFX, Camera.main.transform.position, hitVolume); }
         ProcessHit(damageDealer);
     }
-
     private void ProcessHit(DamageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
@@ -212,7 +211,7 @@ public class Player : MonoBehaviour
     private IEnumerator FireContinuously(float delayInSeconds)
     {
         yield return new WaitForSeconds(delayInSeconds);
-        for(;;)
+        for (;;)
         {
             GameObject projectile = Instantiate(
                 projectilePrefab, 
