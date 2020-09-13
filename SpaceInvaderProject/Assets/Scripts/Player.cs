@@ -32,8 +32,22 @@ public class Player : MonoBehaviour
     [SerializeField] float projectileFiringPeriod = .1f;
     [SerializeField] float timeLastShot;
 
-    [SerializeField] GameSession theGameSession;
+    [Header("Touch Controls")]
+    [SerializeField] float sensitivity = 1.3f;
+
+    GameSession theGameSession;
+
+    // Touch controll
+    TouchManager theTouchManager;
+    TouchTracker moveTracker = null;
+    TouchTracker shotTracker = null;
+    Vector2 destination;
+    Vector2 newPos;
+    Vector2 startTouchPos;
+    Vector2 startObjectPos;
+    Vector2 deltaPos;
     Coroutine firingCoroutine;
+
     float xMin;
     float xMax;
     float yMin;
@@ -43,25 +57,117 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        maxHealth = health;   
+        // Init
+        maxHealth = health;
         SetUpMoveBoundaries();
+        // Finding
         theGameSession = FindObjectOfType<GameSession>();
+        theTouchManager = FindObjectOfType<TouchManager>();
+        // After
         theGameSession.UpdateHealth(Convert.ToInt32(health));
-        StartCoroutine(FireContinuously());
+        // touch manager
+        theTouchManager.OnTrackerCreated = OnTrackerCreated;
+        theTouchManager.OnTrackerLost = OnTrackerLost;
+    }
+    
+    private void OnTrackerCreated()
+    {
+        if (moveTracker == null)
+        {
+            moveTracker = theTouchManager.GetNewTouchTracker("move");
+            moveTracker.OnBegan = (Touch touch, ref Player player) => 
+            {
+                player.SetupTouchOffset(touch);
+            };
+                
+            moveTracker.OnStationary = moveTracker.OnMoved = (Touch touch, ref Player player) =>
+            {
+                player.CalculateDestination(touch.position);
+            };
+
+            moveTracker.OnFrame = (Touch touch, ref Player player) =>
+            {
+                player.Move();
+            };
+        }
+        else if (shotTracker == null)
+        {
+            shotTracker = theTouchManager.GetNewTouchTracker("shot");
+            shotTracker.OnBegan = (Touch touch, ref Player player) =>
+            {
+                player.StartShooting();
+            };
+            shotTracker.OnEnded = (Touch touch, ref Player player) =>
+            {
+                player.StopShooting();
+            };
+        }
+    }
+    private void OnTrackerLost(string trackerName)
+    {
+        switch (trackerName)
+        {
+            case "move":
+                moveTracker = null;
+                break;
+            case "shot":
+                shotTracker = null;
+                break;
+        }
+    }
+    public void SetupTouchOffset(Touch touch)
+    {
+        newPos = transform.position;
+        startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
+        startObjectPos = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CalculateDestination(Vector2 position)
     {
-        // Keyboard controls
-        //RapidMove();
-        //Fire();
+        deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(position) - startTouchPos;
+        destination = startObjectPos + deltaPos * sensitivity;
+    }
 
-        // Touch controls
-        //TouchMove();
-        TouchOffsetMove();
-        //TouchFire();
-        //HandleMultipleTouch();
+    public void Move()
+    {
+        newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+        newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
+        newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
+
+        transform.position = newPos;
+    }
+    public void StartShooting()
+    {
+        float deltaTimeLastShot = Time.time - timeLastShot;
+        if(deltaTimeLastShot < projectileFiringPeriod)
+        {
+            float fireDelay = projectileFiringPeriod - deltaTimeLastShot;
+            firingCoroutine = StartCoroutine(FireContinuously(fireDelay));
+            return;
+        }
+
+        firingCoroutine = StartCoroutine(FireContinuously(0f));
+    }
+    public void StopShooting()
+    {
+        StopCoroutine(firingCoroutine);
+    }
+    void ResetTrackers()
+    {
+        theTouchManager.OnTrackerCreated = null;
+        theTouchManager.OnTrackerLost = null;
+        if(moveTracker != null)
+        {
+            moveTracker.OnBegan = null;
+            moveTracker.OnFrame = null;
+            moveTracker.OnMoved = null;
+            moveTracker.OnStationary = null;
+        }
+        if(shotTracker != null)
+        {
+            shotTracker.OnBegan = null;
+            shotTracker.OnEnded = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -82,21 +188,19 @@ public class Player : MonoBehaviour
             Die();
         }
     }
-
     private void Die()
     {
+        ResetTrackers();
         HandleVFX();
         HandleDestroying();
         if (deathSFX) { AudioSource.PlayClipAtPoint(deathSFX, Camera.main.transform.position, deathVolume); }
         FindObjectOfType<SceneController>().LoadGameOverScene();
     }
-
     private void HandleDestroying()
     {
         Destroy(gameObject, timeToDestroyObject);
         enabled = false;
     }
-
     private void HandleVFX()
     {
         GameObject spawnedExplosionVFX = Instantiate(
@@ -105,24 +209,9 @@ public class Player : MonoBehaviour
             Quaternion.identity) as GameObject;
         Destroy(spawnedExplosionVFX, timeDestroyVFX);
     }
-
-    private void Fire()
+    private IEnumerator FireContinuously(float delayInSeconds)
     {
-        if(Input.GetButtonDown("Fire1"))
-        {
-            if (Time.timeSinceLevelLoad - timeLastShot > projectileFiringPeriod)
-            {
-                firingCoroutine = StartCoroutine(FireContinuously());
-            }
-        }
-        else if(Input.GetButtonUp("Fire1"))
-        {
-            StopCoroutine(firingCoroutine);
-        }
-    }
-
-    private IEnumerator FireContinuously()
-    {
+        yield return new WaitForSeconds(delayInSeconds);
         for(;;)
         {
             GameObject projectile = Instantiate(
@@ -135,128 +224,6 @@ public class Player : MonoBehaviour
             if (shotSFX) { AudioSource.PlayClipAtPoint(shotSFX, Camera.main.transform.position, shotVolume); }
 
             yield return new WaitForSeconds(projectileFiringPeriod);
-        }
-    }
-
-    private void RapidMove()
-    {
-        var deltaX = Input.GetAxisRaw("Horizontal") * Time.deltaTime * moveSpeed;
-        var deltaY = Input.GetAxisRaw("Vertical") * Time.deltaTime * moveSpeed;
-
-        var newXPos = Mathf.Clamp(transform.position.x + deltaX, xMin, xMax);
-        var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
-        transform.position = new Vector2(newXPos, newYPos);
-    }
-    private void SmoothMove()
-    {
-        var deltaX = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
-        var deltaY = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
-
-        var newXPos = Mathf.Clamp(transform.position.x + deltaX, xMin, xMax);
-        var newYPos = Mathf.Clamp(transform.position.y + deltaY, yMin, yMax);
-        transform.position = new Vector2(newXPos, newYPos);
-    }
-
-    private void TouchMove()
-    {
-        if (Input.touchCount > 0)
-        {
-            var touchScreenPos = Input.GetTouch(0).position;
-            Vector2 touchPos = Camera.main.ScreenToWorldPoint(touchScreenPos);
-            Vector2 deltaPos = (touchPos - (Vector2)transform.position).normalized * Time.deltaTime * moveSpeed;
-
-            Vector2 newPos = (Vector2)transform.position + deltaPos;
-
-            
-
-            newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
-            newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
-
-            transform.position = newPos;
-        }
-    }
-
-    // Touch
-    Vector2 startTouchPos;
-    Vector2 startObjectPos;
-    Vector2 deltaPos;
-    int movingID = -1;
-    int shootingID = -3;
-    [Header("Touch Controls")]
-    [SerializeField] float sensitivity = 1.3f;
-
-    private void TouchOffsetMove()
-    {
-        if (Input.touchCount > 0)
-        {
-            Touch moveTouch = Input.GetTouch(0);
-            Vector2 destination;
-            Vector2 newPos = transform.position;
-
-            switch (moveTouch.phase)
-            {
-                case TouchPhase.Began:
-                    SetupTouchOffset(moveTouch);
-                    break;
-                case TouchPhase.Stationary:
-                case TouchPhase.Moved:
-                    if(movingID != moveTouch.fingerId)
-                    {
-                        //if (firingCoroutine != null)
-                        //{
-                        //    StopCoroutine(firingCoroutine);
-                        //}
-                        //firingCoroutine = null;
-                        SetupTouchOffset(moveTouch);
-                    }
-
-                    deltaPos = (Vector2)Camera.main.ScreenToWorldPoint(moveTouch.position) - startTouchPos;
-                    destination = startObjectPos + deltaPos * sensitivity;
-                    newPos = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
-                    break;
-
-                case TouchPhase.Ended:
-                    movingID = -1;
-                    break;
-            }
-
-            newPos.x = Mathf.Clamp(newPos.x, xMin, xMax);
-            newPos.y = Mathf.Clamp(newPos.y, yMin, yMax);
-
-            transform.position = newPos;
-        }
-    }
-
-    private void SetupTouchOffset(Touch touch)
-    {
-        movingID = touch.fingerId;
-        startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
-        startObjectPos = transform.position;
-    }
-
-    private void TouchFire()
-    {
-
-        if (Input.touchCount > 1)
-        {
-            Touch fireTouch = Input.GetTouch(1);
-            
-
-            if(fireTouch.phase == TouchPhase.Began)
-            {
-                if (firingCoroutine == null)
-                {
-                    firingCoroutine = StartCoroutine(FireContinuously());
-                }
-            }
-            else if (fireTouch.phase == TouchPhase.Ended)
-            {
-                if(firingCoroutine != null && fireTouch.fingerId != movingID)
-                {
-                    StopCoroutine(firingCoroutine);
-                } 
-                firingCoroutine = null;
-            }
         }
     }
     private void SetUpMoveBoundaries()

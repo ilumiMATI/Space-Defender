@@ -4,42 +4,28 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-public delegate void OnTouchTrackerLost(string lostTrackerName);
+
 
 public class TouchManager : MonoBehaviour
 {
+    public delegate void EventDetails(string lostTrackerName);
+    public delegate void Event();
+
     [SerializeField] List<TouchTracker> touchTrackers = new List<TouchTracker>();
-    public OnTouchTrackerLost onTouchTrackerLost = null;
+    public EventDetails OnTrackerLost = null;
+    public Event OnTrackerCreated = null;
+
+    // for interacting with player
+    Player thePlayer;
 
     void Start()
     {
-        
+        thePlayer = FindObjectOfType<Player>();
     }
 
     void Update()
     {
         HandleMultipleTouch();
-        HandleTrackers();
-    }
-
-    private void HandleTrackers()
-    {
-        foreach(TouchTracker touchTracker in touchTrackers)
-        {
-            if(touchTracker.theTouch.phase == TouchPhase.Began)
-            {
-                touchTracker.OnBegan();
-            }
-            else if(touchTracker.theTouch.phase == TouchPhase.Moved)
-            {
-                touchTracker.OnMoved();
-            }
-            else if (touchTracker.theTouch.phase == TouchPhase.Ended)
-            {
-                touchTracker.OnEnded();
-                onTouchTrackerLost(touchTracker.name);
-            }
-        }
     }
 
     private void HandleMultipleTouch()
@@ -51,28 +37,53 @@ public class TouchManager : MonoBehaviour
 
             if (currentTouch.phase == TouchPhase.Began)
             {
-                tracker = new TouchTracker(currentTouch,Time.time);
+                tracker = new TouchTracker(currentTouch.fingerId, Time.time);
                 touchTrackers.Add(tracker);
 
-                Debug.Log("Added touch." + currentTouch.fingerId);
+                OnTrackerCreated?.Invoke();
+
+                tracker.OnBegan?.Invoke(currentTouch, ref thePlayer);
+            }
+            else if (currentTouch.phase == TouchPhase.Stationary)
+            {
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
+
+                tracker.OnStationary?.Invoke(currentTouch, ref thePlayer);
             }
             else if (currentTouch.phase == TouchPhase.Moved)
             {
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
+                tracker.OnMoved?.Invoke(currentTouch, ref thePlayer);
             }
             else if (currentTouch.phase == TouchPhase.Ended)
             {
-                touchTrackers.Remove(tracker);
+                tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
-                Debug.Log("Removed touch." + currentTouch.fingerId);
+                tracker.OnEnded?.Invoke(currentTouch, ref thePlayer);
+
+                touchTrackers.Remove(tracker);
+                OnTrackerLost?.Invoke(tracker.name);
             }
+            tracker.OnFrame?.Invoke(currentTouch, ref thePlayer);
         }
     }
 
     public TouchTracker GetNewTouchTracker(string name)
     {
-        touchTrackers.Sort(CompareByTime);
-        return touchTrackers[touchTrackers.Count-1];
+        List<TouchTracker> notUsedTouchTrackers = touchTrackers.FindAll((TouchTracker el) => el.name == "default");
+        
+        if (notUsedTouchTrackers.Count > 0)
+        {
+            notUsedTouchTrackers.Sort(CompareByTime);
+            TouchTracker chosen = notUsedTouchTrackers[notUsedTouchTrackers.Count - 1];
+            chosen.name = name;
+            return chosen;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     private int CompareByTime(TouchTracker a,TouchTracker b)

@@ -1,25 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
-public delegate void Event();
 
 public class TouchTracker
 {
-    public string name = "default";
-    public Touch theTouch { get; }
-    public float timeCreated { get; }
-    public Event OnBegan;
-    public Event OnMoved;
-    public Event OnEnded;
+    public delegate void PlayerTouchEvent(Touch touchInput, ref Player thePlayer);
 
-    public TouchTracker(Touch touch, float time, Event OnBegan = null, Event OnMoved = null, Event OnEnded = null)
+    public string name = "default";
+    public int fingerID { get; }
+    public float timeCreated { get; }
+    public PlayerTouchEvent OnFrame = null;
+    public PlayerTouchEvent OnBegan = null;
+    public PlayerTouchEvent OnStationary = null;
+    public PlayerTouchEvent OnMoved = null;
+    public PlayerTouchEvent OnEnded = null;
+    
+    public TouchTracker(int fingerID, float time)
     {
-        theTouch = touch;
+        this.fingerID = fingerID;
         timeCreated = time;
-        this.OnBegan = OnBegan;
-        this.OnMoved = OnMoved;
-        this.OnEnded = OnEnded;
     }
 }
