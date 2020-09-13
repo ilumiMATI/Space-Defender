@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public delegate void PlayerTouchEvent(Touch touchInput, ref Player thePlayer);
+
 
 public class TouchTracker
 {
+    public delegate void PlayerTouchEvent(Touch touchInput, ref Player thePlayer);
+
     public string name = "default";
     public int fingerID { get; }
     public float timeCreated { get; }

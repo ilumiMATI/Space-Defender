@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
-public delegate void EventDetails(string lostTrackerName);
-public delegate void Event();
+
 
 public class TouchManager : MonoBehaviour
 {
+    public delegate void EventDetails(string lostTrackerName);
+    public delegate void Event();
+
     [SerializeField] List<TouchTracker> touchTrackers = new List<TouchTracker>();
     public EventDetails OnTrackerLost = null;
     public Event OnTrackerCreated = null;

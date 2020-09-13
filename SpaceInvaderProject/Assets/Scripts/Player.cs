@@ -32,19 +32,10 @@ public class Player : MonoBehaviour
     [SerializeField] float projectileFiringPeriod = .1f;
     [SerializeField] float timeLastShot;
 
-    [Header("Touch Debug")]
-    // Touch
-
-    int movingID = -1;
-    int shootingID = -3;
-
     [Header("Touch Controls")]
     [SerializeField] float sensitivity = 1.3f;
 
-    
-
-    [Header("Debug")]
-    [SerializeField] GameSession theGameSession;
+    GameSession theGameSession;
 
     // Touch controll
     TouchManager theTouchManager;
@@ -124,6 +115,12 @@ public class Player : MonoBehaviour
                 break;
         }
     }
+    public void SetupTouchOffset(Touch touch)
+    {
+        newPos = transform.position;
+        startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
+        startObjectPos = transform.position;
+    }
 
     public void CalculateDestination(Vector2 position)
     {
@@ -141,7 +138,15 @@ public class Player : MonoBehaviour
     }
     public void StartShooting()
     {
-        firingCoroutine = StartCoroutine(FireContinuously());
+        float deltaTimeLastShot = Time.time - timeLastShot;
+        if(deltaTimeLastShot < projectileFiringPeriod)
+        {
+            float fireDelay = projectileFiringPeriod - deltaTimeLastShot;
+            firingCoroutine = StartCoroutine(FireContinuously(fireDelay));
+            return;
+        }
+
+        firingCoroutine = StartCoroutine(FireContinuously(0f));
     }
     public void StopShooting()
     {
@@ -204,8 +209,9 @@ public class Player : MonoBehaviour
             Quaternion.identity) as GameObject;
         Destroy(spawnedExplosionVFX, timeDestroyVFX);
     }
-    private IEnumerator FireContinuously()
+    private IEnumerator FireContinuously(float delayInSeconds)
     {
+        yield return new WaitForSeconds(delayInSeconds);
         for(;;)
         {
             GameObject projectile = Instantiate(
@@ -219,12 +225,6 @@ public class Player : MonoBehaviour
 
             yield return new WaitForSeconds(projectileFiringPeriod);
         }
-    }
-    public void SetupTouchOffset(Touch touch)
-    {
-        newPos = transform.position;
-        startTouchPos = Camera.main.ScreenToWorldPoint(touch.position);
-        startObjectPos = transform.position;
     }
     private void SetUpMoveBoundaries()
     {
