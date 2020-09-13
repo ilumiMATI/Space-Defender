@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public delegate void PlayerTouchEvent(Touch touchInput);
+public delegate void PlayerTouchEvent(Touch touchInput, ref Player thePlayer);
 
 public class TouchTracker
 {

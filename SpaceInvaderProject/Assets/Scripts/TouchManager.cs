@@ -40,30 +40,30 @@ public class TouchManager : MonoBehaviour
 
                 OnTrackerCreated?.Invoke();
 
-                tracker.OnBegan?.Invoke(currentTouch);
+                tracker.OnBegan?.Invoke(currentTouch, ref thePlayer);
             }
             else if (currentTouch.phase == TouchPhase.Stationary)
             {
                 tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
-                tracker.OnStationary?.Invoke(currentTouch);
+                tracker.OnStationary?.Invoke(currentTouch, ref thePlayer);
             }
             else if (currentTouch.phase == TouchPhase.Moved)
             {
                 tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
-                tracker.OnMoved?.Invoke(currentTouch);
+                tracker.OnMoved?.Invoke(currentTouch, ref thePlayer);
             }
             else if (currentTouch.phase == TouchPhase.Ended)
             {
                 tracker = touchTrackers.Find((TouchTracker touchTracker) => touchTracker.fingerID == currentTouch.fingerId);
 
-                tracker.OnEnded?.Invoke(currentTouch);
+                tracker.OnEnded?.Invoke(currentTouch, ref thePlayer);
 
                 touchTrackers.Remove(tracker);
                 OnTrackerLost?.Invoke(tracker.name);
             }
-            tracker.OnFrame?.Invoke(currentTouch);
+            tracker.OnFrame?.Invoke(currentTouch, ref thePlayer);
         }
     }
 
